@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ "$#" -ne "0" ]; then
+	echo "Ignoring everything after command and telling system time..."
+fi
+
 mn=$((10#$(date +%M)))
 
 hours=("twelve" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" "eleven")
