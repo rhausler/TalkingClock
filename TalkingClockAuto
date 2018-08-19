@@ -1,0 +1,17 @@
+#!/bin/bash
+
+mn=$((10#$(date +%M)))
+
+hours=("twelve" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" "eleven")
+tens=(" oh" "" " twenty" " thirty" " forty" " fifty")
+ones=("clock" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" "eleven" "twelve" "thirteen" "fourteen" "fifteen" "sixteen" "seventeen" "eighteen" "nineteen")
+
+if (( $(($mn/10)) > 1 )) && (( $(($mn%10)) == 0 )); then
+	teen=""
+elif (( $(($mn/10)) == 1 )); then
+	teen=" ${ones[$(($mn%20))]}"
+else
+	teen=" ${ones[$(($mn%10))]}"
+fi
+
+echo "It's ${hours[$(($(date +%H)%12))]}${tens[$(($mn/10))]}$teen $(date +%p)"

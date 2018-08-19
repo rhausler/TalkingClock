@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [ "$#" -lt "1" ] || [ "$#" -gt "2" ]; then
+	echo "Usage:"
+	echo "	./TalkingClockManual <time>"
+	echo "	Enter a valid 12H time ([1-12]:[0-59][am/pm]) or 24H time ([0-23]:[00-59])."
+	exit
+fi
+
+tim=$1$2
+
+[[ "$tim" =~ ^[0-9]{1,2}:[0-9]{2}([AaPp][Mm]?)?$ ]] || { echo "Please enter a valid 12H time ([1-12]:[0-59][am/pm]) or 24H time ([0-23]:[00-59]). Exiting..." && exit; }
+
+hr=$((10#$(echo $tim | cut -d: -f1)))
+mn=$((10#$(echo $tim | cut -d: -f2- | sed 's/[^0-9]*//g')))
+ap=$(echo $tim | sed 's/[^AaPpMm]*//g' | perl -ne 'print uc') && (( $(echo $ap | wc -c) == 1 )) || (( $(echo $ap | wc -c) == 3 )) || ap=$ap"M"
+
+(( $hr < 24 )) && (( $hr > -1 )) && (( $mn < 60 )) && (( $mn > -1 )) || { echo "Please enter a valid 12H time ([1-12]:[0-59][am/pm]) or 24H time ([0-23]:[00-59]). Exiting..." && exit; }
+
+[[ -z $ap ]] || { { { (( $hr > 12 )) && [[ "$ap" == "AM" ]]; } || { (( $hr < 1 )) && [[ "$ap" == "PM" ]]; }; } && echo "Input time is impossible. Please check your hour and AM/PM. Exiting..." && exit; }
+
+hours=("twelve" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" "eleven")
+tens=(" oh" "" " twenty" " thirty" " forty" " fifty")
+ones=("clock" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" "eleven" "twelve" "thirteen" "fourteen" "fifteen" "sixteen" "seventeen" "eighteen" "nineteen")
+
+if (( $(($mn/10)) > 1 )) && (( $(($mn%10)) == 0 )); then
+	teen=""
+elif (( $(($mn/10)) == 1 )); then
+	teen=" ${ones[$(($mn%20))]}"
+else
+	teen=" ${ones[$(($mn%10))]}"
+fi
+
+[[ -n $ap ]] || { (( $hr > 11 )) && ap="PM" || ap="AM"; }
+
+echo "It's ${hours[$(($hr%12))]}${tens[$(($mn/10))]}$teen $ap"
