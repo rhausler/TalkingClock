@@ -1,10 +1,13 @@
 #!/bin/bash
 
+dat=$(date +%H%M%p)
+hr=${dat:0:2}
+mn=$((10#${dat:2:2}))
+ap=${dat:4:2}
+
 if [ "$#" -ne "0" ]; then
 	echo "Ignoring everything after command and telling system time..."
 fi
-
-mn=$((10#$(date +%M)))
 
 hours=("twelve" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" "eleven")
 tens=(" oh" "" " twenty" " thirty" " forty" " fifty")
@@ -18,4 +21,4 @@ else
 	teen=" ${ones[$(($mn%10))]}"
 fi
 
-echo "It's ${hours[$(($(date +%H)%12))]}${tens[$(($mn/10))]}$teen $(date +%p)"
+echo "It's ${hours[$(($hr%12))]}${tens[$(($mn/10))]}$teen $ap"
