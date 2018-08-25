@@ -17,7 +17,7 @@ ap=$(echo $tim | sed 's/[^AaPpMm]*//g' | perl -ne 'print uc') && (( $(echo $ap |
 
 (( $hr < 24 )) && (( $hr > -1 )) && (( $mn < 60 )) && (( $mn > -1 )) || { echo "Please enter a valid 12H time ([1-12]:[0-59][am/pm]) or 24H time ([0-23]:[00-59]). Exiting..." && exit; }
 
-[[ -z $ap ]] || { { { (( $hr > 12 )) && [[ "$ap" == "AM" ]]; } || { (( $hr < 1 )) && [[ "$ap" == "PM" ]]; }; } && echo "Input time is impossible. Please check your hour and AM/PM. Exiting..." && exit; }
+[ -z $ap ] || { { { (( $hr > 12 )) && [ "$ap" == "AM" ]; } || { (( $hr < 1 )) && [ "$ap" == "PM" ]; }; } && echo "Input time is impossible. Please check your hour and AM/PM. Exiting..." && exit; }
 
 hours=("twelve" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine" "ten" "eleven")
 tens=(" oh" "" " twenty" " thirty" " forty" " fifty")
